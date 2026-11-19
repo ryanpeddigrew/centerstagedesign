@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Center Stage AV | 50-Tile Aurora Stage Studio</title>
+<meta name="description" content="Center Stage AV interactive 50-tile Aurora Borealis scenic stage studio.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090B;
+  --panel:#121215;
+  --panel2:#1A1A1F;
+  --border:#2A2A32;
+  --text:#FFFFFF;
+  --muted:#A1A1AA;
+  --cs-red:#DC2626;
+  --cs-red-bright:#EF4444;
+  --aurora-teal:#2DD4BF;
+  --aurora-green:#34D399;
+  --aurora-cyan:#38BDF8;
+  --disp:'Oswald',sans-serif;
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font:400 15px/1.5 var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+
+/* Center Stage Red, White & Black Header */
+header.cs-header{
+  position:sticky;top:0;z-index:50;
+  background:#09090B;
+  border-bottom:3px solid var(--cs-red);
+}
+.cs-header-in{
+  max-width:1380px;margin:0 auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.cs-logo{display:flex;align-items:center;gap:14px}
+.cs-mark{
+  width:46px;height:46px;border-radius:6px;
+  background:#141417;border:2px solid var(--cs-red);
+  display:grid;place-items:center;flex:none;
+}
+.cs-wordmark{display:flex;flex-direction:column}
+.cs-wordmark b{
+  font:700 25px/.95 var(--disp);letter-spacing:.08em;text-transform:uppercase;color:#FFFFFF;
+}
+.cs-wordmark b em{font-style:normal;color:var(--cs-red-bright)}
+.cs-wordmark span{
+  font:600 11px/1.2 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#D4D4D8;margin-top:4px;
+}
+
+.cs-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cs-tag{
+  padding:7px 14px;border-radius:4px;
+  background:#18181B;border:1px solid #27272A;
+  font:700 12px/1 var(--disp);letter-spacing:.14em;text-transform:uppercase;color:#FFFFFF;
+}
+.cs-tag.red{background:var(--cs-red);border-color:var(--cs-red);color:#FFFFFF}
+
+/* Main Workspace */
+.workspace{
+  max-width:1380px;margin:0 auto;padding:20px;
+  display:grid;grid-template-columns:1.5fr .85fr;gap:20px;align-items:start;
+}
+@media(max-width:1040px){.workspace{grid-template-columns:1fr}}
+
+/* Stage Panel */
+.stage-panel{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+}
+.tabs-header{
+  padding:14px 18px;background:#0F0F12;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.tabs-row{display:flex;gap:8px;flex-wrap:wrap}
+.opt-tab{
+  min-height:40px;padding:0 16px;border-radius:5px;
+  background:#1C1C22;border:1px solid #32323C;
+  font:700 12.5px/1 var(--disp);letter-spacing:.1em;text-transform:uppercase;
+  color:#D4D4D8;cursor:pointer;transition:all .15s ease;
+}
+.opt-tab:hover{color:#FFFFFF;border-color:#71717A}
+.opt-tab[aria-pressed="true"]{
+  background:var(--cs-red);color:#FFFFFF;border-color:var(--cs-red);
+}
+.tile-count-badge{
+  padding:7px 12px;border-radius:4px;
+  background:#18181B;border:1px solid #3F3F46;
+  font:700 12px/1 var(--disp);letter-spacing:.12em;text-transform:uppercase;color:#FFFFFF;
+}
+
+/* Ballroom Stage Canvas (Aurora Borealis ONLY inside the stage design) */
+.ballroom{
+  position:relative;width:100%;aspect-ratio:16/9.4;min-height:400px;
+  background:radial-gradient(ellipse at 50% 12%,#141824 0%,#050507 82%);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding:22px 20px 0;overflow:hidden;user-select:none;
+}
+.truss-bar{
+  position:absolute;top:12px;left:4%;right:4%;height:8px;
+  background:repeating-linear-gradient(90deg,#27272A 0 14px,#09090B 14px 20px);
+  border:1px solid #3F3F46;border-radius:2px;
+}
+.stage-assembly{
+  position:relative;width:92%;height:76%;
+  display:flex;align-items:flex-end;justify-content:center;gap:12px;
+}
+
+/* Left Projection Screen with Content */
+.proj-screen-wrap{
+  width:24%;height:72%;align-self:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .2s ease;
+}
+.proj-screen{
+  width:100%;aspect-ratio:16/10;
+  background:linear-gradient(135deg,#06131A,#0C2733 55%,#091E26);
+  border:3px solid #E4E4E7;border-radius:3px;
+  box-shadow:0 0 24px rgba(45,212,191,.28);
+  padding:10px;display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.proj-screen::before{
+  content:"";position:absolute;inset:-20%;
+  background:radial-gradient(circle at 75% 25%,rgba(52,211,153,.35),transparent 60%),
+             radial-gradient(circle at 25% 80%,rgba(56,189,248,.3),transparent 60%);
+  pointer-events:none;
+}
+.scr-top{
+  position:relative;z-index:1;
+  font:700 8px/1 var(--disp);letter-spacing:.16em;text-transform:uppercase;color:#2DD4BF;
+}
+.scr-main{position:relative;z-index:1;margin:auto 0}
+.scr-main b{
+  display:block;font:700 clamp(11px,1.2vw,15px)/1.08 var(--disp);
+  letter-spacing:.06em;text-transform:uppercase;color:#FFFFFF;
+}
+.scr-main small{
+  display:block;font:500 8.5px/1.25 var(--sans);color:#BAE6FD;margin-top:3px;
+}
+.scr-bar{
+  position:relative;z-index:1;height:2px;width:45%;
+  background:linear-gradient(90deg,#2DD4BF,#34D399);
+}
+.screen-legs{
+  width:76%;height:26%;border-left:2px solid #52525B;border-right:2px solid #52525B;
+}
+
+/* Main 24ft x 14ft Black Velvet Backdrop with Aurora Borealis Wash */
+.backdrop-wall{
+  position:relative;flex:1;height:100%;
+  background:#050608;border:1px solid #27272A;border-bottom:0;
+  overflow:hidden;display:flex;align-items:flex-start;justify-content:center;
+}
+.aurora-curtain{
+  position:absolute;inset:-25%;pointer-events:none;
+  background:
+    radial-gradient(ellipse 62% 44% at 22% 34%, rgba(45,212,191,var(--wash,0.55)), transparent 66%),
+    radial-gradient(ellipse 58% 46% at 52% 28%, rgba(52,211,153,var(--wash,0.50)), transparent 68%),
+    radial-gradient(ellipse 62% 44% at 78% 38%, rgba(56,189,248,var(--wash,0.46)), transparent 70%);
+  filter:blur(16px);
+}
+.star-drape{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 16%, #ffffff, transparent),
+    radial-gradient(1.2px 1.2px at 24% 38%, #99f6e4, transparent),
+    radial-gradient(2px 2px at 36% 14%, #ffffff, transparent),
+    radial-gradient(1.4px 1.4px at 49% 26%, #bae6fd, transparent),
+    radial-gradient(1.8px 1.8px at 62% 15%, #ffffff, transparent),
+    radial-gradient(1.2px 1.2px at 74% 34%, #6ee7b7, transparent),
+    radial-gradient(2px 2px at 86% 19%, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 18% 60%, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 82% 58%, #ffffff, transparent);
+  opacity:var(--stars,0.8);
+}
+.velvet-pleats{
+  position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 2px,rgba(0,0,0,.44) 2px 14px);
+}
+
+/* 50-Tile Rig */
+.tile-rig{
+  position:relative;z-index:2;width:100%;height:100%;
+  padding:14px 14px 10px;
+  display:flex;align-items:flex-start;justify-content:center;
+  gap:var(--col-gap,14px);
+}
+.tile-col{display:flex;flex-direction:column;align-items:center;gap:4px}
+.wafer-tile{
+  width:var(--tile-sz,20px);height:var(--tile-sz,20px);
+  border-radius:2px;
+  background:linear-gradient(135deg,#2DD4BF,#34D399 48%,#E0F2FE);
+  border:1px solid rgba(255,255,255,.78);
+  box-shadow:0 0 11px rgba(45,212,191,.55),inset 0 0 5px rgba(255,255,255,.65);
+}
+.chain-wire{width:2px;height:4px;background:#71717A;margin:-4px 0 0}
+
+/* Podium & Speaker on Stage */
+.stage-props{
+  position:absolute;bottom:0;left:0;right:0;z-index:4;
+  pointer-events:none;height:110px;
+}
+.podium-box{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:46px;height:66px;display:flex;flex-direction:column;align-items:center;
+  transition:left .22s ease;
+}
+.podium-box.left{left:34%}
+.podium-box.right{left:66%}
+.podium-cap{width:52px;height:8px;background:#27272A;border:1px solid #52525B;border-radius:2px}
+.podium-front{
+  width:38px;height:52px;background:linear-gradient(180deg,#18181B,#09090B);
+  border:1px solid #3F3F46;border-bottom:0;display:grid;place-items:center;
+}
+.podium-front i{width:16px;height:16px;border-radius:2px;border:1px solid #2DD4BF;background:rgba(45,212,191,.18);display:block}
+.podium-foot{width:48px;height:6px;background:#27272A}
+
+.speaker-rig{
+  position:absolute;bottom:0;right:9%;width:28px;height:90px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.speaker-box{
+  width:26px;height:42px;background:#09090B;border:1px solid #52525B;border-radius:3px;
+  display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;padding:3px 0;
+}
+.speaker-box i{width:12px;height:12px;border-radius:50%;border:1px solid #71717A;display:block}
+.speaker-stand{width:3px;height:40px;background:#52525B}
+.speaker-legs{width:28px;height:8px;border-top:2px solid #52525B;border-left:2px solid #52525B;border-right:2px solid #52525B}
+
+/* 24ft x 2ft Stage Riser */
+.stage-deck{
+  position:relative;z-index:5;width:94%;height:34px;
+  background:linear-gradient(180deg,#27272A 0%,#121215 28%,#09090B 100%);
+  border-top:2px solid #52525B;
+  display:flex;align-items:center;justify-content:space-between;padding:0 14px;
+  font:600 11px/1 var(--disp);letter-spacing:.14em;text-transform:uppercase;color:#D4D4D8;
+}
+
+.layout-summary{
+  padding:14px 18px;background:#0D0D10;border-top:1px solid var(--border);
+  font-size:13.5px;color:#E4E4E7;
+}
+.layout-summary strong{color:#FFFFFF}
+
+/* Right Controls Panel (Center Stage Red / White / Black UI) */
+.side-col{display:flex;flex-direction:column;gap:16px}
+.box{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px;
+}
+.box h2{
+  font:700 15px/1 var(--disp);letter-spacing:.14em;text-transform:uppercase;
+  color:#FFFFFF;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);padding-bottom:10px;
+}
+.box h2 span{font:600 11px/1 var(--sans);letter-spacing:.08em;color:var(--cs-red-bright)}
+
+.ctrl-grid{display:grid;gap:12px}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:600;color:var(--muted);display:flex;justify-content:space-between}
+.field select,.field input[type="text"]{
+  width:100%;min-height:38px;padding:0 10px;border-radius:5px;
+  background:var(--panel2);border:1px solid var(--border);font-size:13px;color:#FFFFFF;
+}
+.field input[type="range"]{width:100%;accent-color:var(--cs-red);cursor:pointer}
+
+.prompt-area{
+  width:100%;min-height:145px;padding:12px;border-radius:6px;
+  background:#09090B;border:1px solid var(--border);
+  font:400 12.5px/1.5 var(--sans);color:#F4F4F5;resize:vertical;
+}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.btn-red{
+  min-height:44px;padding:0 16px;border-radius:5px;border:0;
+  background:var(--cs-red);color:#FFFFFF;
+  font:700 13px/1 var(--disp);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+}
+.btn-red:hover{background:var(--cs-red-bright)}
+.btn-dark{
+  min-height:44px;padding:0 16px;border-radius:5px;
+  background:var(--panel2);border:1px solid #3F3F46;color:#FFFFFF;
+  font:700 13px/1 var(--disp);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+}
+.btn-dark:hover{border-color:#FFFFFF}
+
+footer.cs-footer{
+  max-width:1380px;margin:10px auto 28px;padding:14px 20px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  font-size:12px;color:var(--muted);
+}
+footer.cs-footer strong{color:#FFFFFF}
+</style>
+</head>
+<body>
+
+<header class="cs-header">
+  <div class="cs-header-in">
+    <div class="cs-logo">
+      <div class="cs-mark" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <polygon points="5,5 24,14 5,23" fill="#DC2626"/>
+          <rect x="4" y="5" width="3" height="18" fill="#FFFFFF"/>
+        </svg>
+      </div>
+      <div class="cs-wordmark">
+        <b>Center <em>Stage</em></b>
+        <span>Audio Visual · Scenic Render Studio</span>
+      </div>
+    </div>
+
+    <div class="cs-meta">
+      <span class="cs-tag red">50 Tiles</span>
+      <span class="cs-tag">24' × 2' Stage · 14' Trim</span>
+      <span class="cs-tag">Aurora Borealis Scenic</span>
+    </div>
+  </div>
+</header>
+
+<main class="workspace">
+  <!-- Left: 3 Scenic Decor Options -->
+  <section class="stage-panel" aria-label="Center Stage Scenic Options">
+    <div class="tabs-header">
+      <div class="tabs-row" role="group" aria-label="3 Scenic Options">
+        <button type="button" class="opt-tab" data-opt="1" aria-pressed="true">Option 1: 5-Column Aurora</button>
+        <button type="button" class="opt-tab" data-opt="2" aria-pressed="false">Option 2: Podium 2-3-2 Cascade</button>
+        <button type="button" class="opt-tab" data-opt="3" aria-pressed="false">Option 3: Architectural V-Wings</button>
+      </div>
+      <span class="tile-count-badge" id="tileCountBadge">50 Tiles Total</span>
+    </div>
+
+    <div class="ballroom">
+      <div class="truss-bar" aria-hidden="true"></div>
+      <div class="stage-assembly">
+        <!-- Projection Screen with Content -->
+        <div class="proj-screen-wrap" id="projScreenWrap">
+          <div class="proj-screen">
+            <span class="scr-top" id="scrEyebrow">KEYNOTE PRESENTATION</span>
+            <div class="scr-main">
+              <b id="scrTitle">ANNUAL LEADERSHIP SUMMIT</b>
+              <small id="scrSub">Welcome &amp; Opening Remarks</small>
+            </div>
+            <div class="scr-bar"></div>
+          </div>
+          <div class="screen-legs"></div>
+        </div>
+
+        <!-- 24ft x 14ft Aurora Borealis Scenic Backdrop -->
+        <div class="backdrop-wall">
+          <div class="aurora-curtain" id="auroraCurtain"></div>
+          <div class="star-drape" id="starDrape"></div>
+          <div class="velvet-pleats"></div>
+
+          <div class="tile-rig" id="tileRig"></div>
+
+          <div class="stage-props">
+            <div class="podium-box" id="podiumBox">
+              <div class="podium-cap"></div>
+              <div class="podium-front"><i></i></div>
+              <div class="podium-foot"></div>
+            </div>
+
+            <div class="speaker-rig" id="speakerRig">
+              <div class="speaker-box"><i></i><i></i></div>
+              <div class="speaker-stand"></div>
+              <div class="speaker-legs"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-deck">
+        <span>24 FT WIDE STAGE DECK</span>
+        <span id="deckSpecLine">14 FT TRIM · 14" GAP · NORTHERN LIGHTS</span>
+        <span>2 FT RISER</span>
+      </div>
+    </div>
+
+    <div class="layout-summary" id="layoutSummary">
+      <strong>Option 1 — 5-Column Symmetrical Aurora (5 × 10 = 50 Tiles):</strong> Five evenly spaced vertical columns of 10 chain-link LED tiles washed in teal, green, and white Northern Lights tones beside the presentation screen, podium, and speaker.
+    </div>
+  </section>
+
+  <!-- Right: Controls & Render Prompt -->
+  <aside class="side-col">
+    <div class="box">
+      <h2>Scenic &amp; Screen Controls <span>Aurora Tools</span></h2>
+      <div class="ctrl-grid">
+        <div class="row-2">
+          <div class="field">
+            <label for="gapRange">Column Gap <span id="gapLabel">14"</span></label>
+            <input type="range" id="gapRange" min="12" max="16" step="1" value="14">
+          </div>
+          <div class="field">
+            <label for="washRange">Aurora Wash <span id="washLabel">85%</span></label>
+            <input type="range" id="washRange" min="40" max="100" step="5" value="85">
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="starRange">Star Drape / Projector <span id="starLabel">80%</span></label>
+            <input type="range" id="starRange" min="0" max="100" step="10" value="80">
+          </div>
+          <div class="field">
+            <label for="podiumPos">Podium Placement</label>
+            <select id="podiumPos">
+              <option value="center" selected>Center Stage</option>
+              <option value="left">Stage Left</option>
+              <option value="right">Stage Right</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="scrTitleInput">Screen Headline Content</label>
+          <input type="text" id="scrTitleInput" value="ANNUAL LEADERSHIP SUMMIT" placeholder="Screen headline">
+        </div>
+
+        <div class="field">
+          <label for="scrSubInput">Screen Sub-Caption</label>
+          <input type="text" id="scrSubInput" value="Welcome & Opening Remarks" placeholder="Screen subtitle">
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <h2>Render Prompt &amp; Spec <span>50 Tiles</span></h2>
+      <textarea class="prompt-area" id="promptText"></textarea>
+      <div class="btn-row">
+        <button type="button" class="btn-red" id="copyBtn">Copy Prompt</button>
+        <button type="button" class="btn-dark" id="exportBtn">Download Spec</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<footer class="cs-footer">
+  <span><strong>Center Stage AV</strong> · Scenic Render &amp; Staging Preview</span>
+  <span>3 Options · 50 Chain-Link Wafer Tiles · 24' Stage · 14' Trim</span>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+
+const OPTIONS={
+  1:{
+    title:"Option 1 — 5-Column Symmetrical Aurora (5 × 10 = 50 Tiles)",
+    cols:[10,10,10,10,10],
+    summary:"<strong>Option 1 — 5-Column Symmetrical Aurora (5 × 10 = 50 Tiles):</strong> Five evenly spaced vertical columns of 10 chain-link LED tiles washed in teal, green, and white Northern Lights tones beside the presentation screen, podium, and speaker.",
+    promptDesc:"arranged in 5 symmetrical vertical columns of 10 tiles each (50 tiles total), separated by clean black velvet gaps"
+  },
+  2:{
+    title:"Option 2 — Podium-Framed 2-3-2 Cascade (50 Tiles)",
+    cols:[9,8,4,2,3,2,4,8,10],
+    summary:"<strong>Option 2 — Podium-Framed 2-3-2 Cascade (9+8+4+2+3+2+4+8+10 = 50 Tiles):</strong> Accounts for the podium and speaker with a stepped 2–3–2 center drop flanked by taller stepped wings on the left and right.",
+    promptDesc:"arranged in a podium-framed stepped cascade totaling 50 tiles: a 2-tile, 3-tile, 2-tile center drop over the podium flanked by stepped inner and outer columns (4, 8, 9 on left and 4, 8, 10 on right)"
+  },
+  3:{
+    title:"Option 3 — Architectural V-Wings (50 Tiles)",
+    cols:[11,9,5,5,9,11],
+    summary:"<strong>Option 3 — Architectural V-Wings (11+9+5+5+9+11 = 50 Tiles):</strong> Tall 11-tile outer wings tapering inward to twin 5-tile center drops, leaving clean headroom above the podium.",
+    promptDesc:"arranged in a wide V-tapered architectural frame totaling 50 tiles, with tall 11-tile and 9-tile outer wings tapering to twin 5-tile center drops above the podium"
+  }
+};
+
+let state={
+  opt:1,
+  gap:14,
+  wash:85,
+  stars:80,
+  podium:"center",
+  scrTitle:"ANNUAL LEADERSHIP SUMMIT",
+  scrSub:"Welcome & Opening Remarks"
+};
+
+function renderStage(){
+  const cfg=LAYOUTS_CFG=OPTIONS[state.opt];
+  const rig=$('#tileRig');
+  rig.innerHTML='';
+
+  const gapPx=Math.round((state.gap/14)*13);
+  rig.style.setProperty('--col-gap',gapPx+'px');
+  const maxRows=Math.max(...cfg.cols);
+  rig.style.setProperty('--tile-sz',(maxRows>=11?18:(maxRows===10?20:22))+'px');
+
+  cfg.cols.forEach(count=>{
+    const col=document.createElement('div');
+    col.className='tile-col';
+    for(let i=0;i<count;i++){
+      if(i>0){
+        const wire=document.createElement('span');
+        wire.className='chain-wire';
+        col.appendChild(wire);
+      }
+      const tile=document.createElement('div');
+      tile.className='wafer-tile';
+      col.appendChild(tile);
+    }
+    rig.appendChild(col);
+  });
+
+  const sum=cfg.cols.reduce((a,b)=>a+b,0);
+  $('#tileCountBadge').textContent=`${sum} Tiles Total`;
+  $('#layoutSummary').innerHTML=cfg.summary;
+  $('#deckSpecLine').textContent=`14 FT TRIM · ${state.gap}" GAP · NORTHERN LIGHTS`;
+
+  $('#auroraCurtain').style.setProperty('--wash',(state.wash/100*0.64).toFixed(2));
+  $('#starDrape').style.setProperty('--stars',(state.stars/100).toFixed(2));
+
+  const pod=$('#podiumBox');
+  pod.className='podium-box'+(state.podium==='left'?' left':state.podium==='right'?' right':'');
+
+  $('#scrTitle').textContent=state.scrTitle;
+  $('#scrSub').textContent=state.scrSub;
+
+  buildPrompt();
+}
+
+function buildPrompt(){
+  const cfg=OPTIONS[state.opt];
+  const starNote=state.stars>10
+    ?`Subtle star-drape pinpoints and star-projector speckles (${state.stars}% intensity) across the upper black drape.`
+    :`Clean matte black velvet backdrop.`;
+
+  $('#promptText').value=
+`Photorealistic wide-angle corporate event stage render by Center Stage AV. A 24-foot wide by 2-foot tall black-skirted stage inside a dark hotel ballroom. On the left side stands a framed 16:10 projection screen displaying the keynote slide "${state.scrTitle} — ${state.scrSub}" with aurora-toned graphics. Behind the stage hangs a 14-foot tall black velvet backdrop illuminated by a Northern Lights (Aurora Borealis) lighting wash in teal, green, cyan, and white against a mystic black night sky. Suspended across the backdrop are exactly 50 glowing modular square LED wafer tiles ${cfg.promptDesc} with ${state.gap}-inch vertical column gaps, each glowing with aurora borealis gradients. A sleek black speaking podium is positioned ${state.podium==='center'?'center-stage':state.podium==='left'?'stage-left':'stage-right'}, with a black speaker on a tripod stand on stage right. ${starNote} Realistic stage lighting and reflections, 16:9 presentation render.`;
+}
+
+$$('.opt-tab').forEach(btn=>btn.onclick=()=>{
+  $$('.opt-tab').forEach(b=>b.setAttribute('aria-pressed','false'));
+  btn.setAttribute('aria-pressed','true');
+  state.opt=parseInt(btn.dataset.opt,10);
+  renderStage();
+});
+
+$('#gapRange').oninput=e=>{
+  state.gap=parseInt(e.target.value,10);
+  $('#gapLabel').textContent=state.gap+'"';
+  renderStage();
+};
+
+$('#washRange').oninput=e=>{
+  state.wash=parseInt(e.target.value,10);
+  $('#washLabel').textContent=state.wash+'%';
+  renderStage();
+};
+
+$('#starRange').oninput=e=>{
+  state.stars=parseInt(e.target.value,10);
+  $('#starLabel').textContent=state.stars+'%';
+  renderStage();
+};
+
+$('#podiumPos').onchange=e=>{
+  state.podium=e.target.value;
+  renderStage();
+};
+
+$('#scrTitleInput').oninput=e=>{
+  state.scrTitle=e.target.value||'ANNUAL LEADERSHIP SUMMIT';
+  renderStage();
+};
+
+$('#scrSubInput').oninput=e=>{
+  state.scrSub=e.target.value||'Welcome & Opening Remarks';
+  renderStage();
+};
+
+$('#copyBtn').onclick=()=>{
+  const area=$('#promptText');
+  area.select();
+  navigator.clipboard?.writeText(box=area.value);
+  const b=$('#copyBtn');
+  b.textContent='Copied!';
+  setTimeout(()=>b.textContent='Copy Prompt',1600);
+};
+
+$('#exportBtn').onclick=()=>{
+  const cfg=OPTIONS[state.opt];
+  const content=[
+    `CENTER STAGE AV — NORTHERN LIGHTS 50-TILE SCENIC SPEC`,
+    `Selected Option: ${cfg.title}`,
+    `Column Breakdown: ${cfg.cols.join(' - ')} (50 Tiles Total)`,
+    `Stage & Trim: 24 ft W x 2 ft H Stage | 14 ft Trim | ${state.gap}" Gap`,
+    `Screen Content: ${state.scrTitle} — ${state.scrSub}`,
+    ``,
+    `RENDER PROMPT:`,
+    $('#promptText').value
+  ].join('
+');
+  const blob=new Blob([content],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='center-stage-av-50-tile-spec.txt';
+  a.click();
+};
+
+renderStage();
+</script>
+</body>
+</html>
