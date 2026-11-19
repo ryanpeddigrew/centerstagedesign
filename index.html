@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Center Stage AV | 50-Tile Aurora Stage Render &amp; Spec Studio</title>
+<meta name="description" content="Interactive 50-tile Aurora Borealis stage visualizer, client branding customizer, and production spec generator by Center Stage AV.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#070B12">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070B12;
+  --panel:#0E1522;
+  --panel2:#131D2E;
+  --border:#22314A;
+  --text:#F4F7FB;
+  --muted:#9AA8BE;
+  --teal:#2DD4BF;
+  --green:#34D399;
+  --blue:#38BDF8;
+  --accent:#2DD4BF;
+  --disp:'Oswald',sans-serif;
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font:400 15px/1.5 var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+
+/* Top Brand Bar */
+header.topbar{
+  position:sticky;top:0;z-index:40;
+  background:#070B12eb;backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.topbar-in{
+  max-width:1380px;margin:0 auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.cs-brand{display:flex;align-items:center;gap:14px}
+.cs-mark{
+  width:40px;height:40px;border-radius:8px;
+  background:linear-gradient(135deg,#0F172A,#1E293B);
+  border:1px solid #334155;display:grid;place-items:center;flex:none;
+}
+.cs-title{display:flex;flex-direction:column}
+.cs-title b{font:700 20px/1 var(--disp);letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.cs-title span{font:600 11px/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-top:3px}
+
+.client-pill{
+  display:flex;align-items:center;gap:10px;
+  background:var(--panel2);border:1px solid var(--border);
+  padding:6px 12px;border-radius:999px;
+}
+.client-pill img{width:24px;height:24px;border-radius:4px;object-fit:contain;background:#fff;padding:2px}
+.client-pill small{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.client-pill strong{font-size:13px;font-weight:600;color:#fff}
+
+/* Main Workspace */
+.shell{
+  max-width:1380px;margin:0 auto;padding:20px;
+  display:grid;grid-template-columns:1.45fr .85fr;gap:20px;align-items:start;
+}
+@media(max-width:1040px){.shell{grid-template-columns:1fr}}
+
+/* Stage Viewport Card */
+.stage-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;
+}
+.stage-bar{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.layout-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab-btn{
+  min-height:38px;padding:0 14px;border-radius:8px;
+  background:var(--panel2);border:1px solid var(--border);
+  font:600 12px/1 var(--disp);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;transition:all .16s ease;
+}
+.tab-btn:hover{color:#fff;border-color:#475569}
+.tab-btn[aria-pressed="true"]{
+  background:var(--accent);color:#041014;border-color:var(--accent);
+}
+.tile-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 12px;border-radius:6px;
+  background:#091E22;border:1px solid #1D4E56;
+  font:700 12px/1 var(--disp);letter-spacing:.12em;text-transform:uppercase;color:var(--teal);
+}
+.tile-badge i{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+
+/* Ballroom Stage Canvas */
+.ballroom{
+  position:relative;width:100%;aspect-ratio:16/9.4;min-height:360px;
+  background:radial-gradient(ellipse at 50% 15%,#111C2E 0%,#05070B 78%);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding:22px 24px 0;overflow:hidden;user-select:none;
+}
+.ceiling-truss{
+  position:absolute;top:12px;left:6%;right:6%;height:8px;
+  background:repeating-linear-gradient(90deg,#1E293B 0 14px,#0F172A 14px 20px);
+  border:1px solid #334155;border-radius:2px;opacity:.85;
+}
+.drape-frame{
+  position:relative;width:88%;height:74%;
+  background:#06080D;border:1px solid #1E293B;border-bottom:0;
+  box-shadow:0 0 60px #000000cc;overflow:hidden;
+  display:flex;align-items:flex-start;justify-content:center;
+}
+/* Aurora Borealis Wash */
+.aurora-wash{
+  position:absolute;inset:-20%;pointer-events:none;
+  background:
+    radial-gradient(ellipse 65% 45% at 24% 38%, rgba(45,212,191,var(--wash,0.42)), transparent 68%),
+    radial-gradient(ellipse 60% 48% at 74% 32%, rgba(52,211,153,var(--wash,0.38)), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 50% 62%, rgba(56,189,248,var(--wash,0.34)), transparent 72%);
+  filter:blur(18px);
+  transition:opacity .3s ease,filter .3s ease;
+}
+.aurora-wash.mode-blue{
+  background:
+    radial-gradient(ellipse 65% 45% at 28% 35%, rgba(56,189,248,var(--wash,0.48)), transparent 68%),
+    radial-gradient(ellipse 60% 48% at 72% 40%, rgba(37,99,235,var(--wash,0.44)), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 50% 65%, rgba(186,230,253,var(--wash,0.28)), transparent 72%);
+}
+.aurora-wash.mode-mystic{
+  background:
+    radial-gradient(ellipse 65% 45% at 30% 35%, rgba(226,232,240,var(--wash,0.32)), transparent 68%),
+    radial-gradient(ellipse 60% 48% at 70% 42%, rgba(45,212,191,var(--wash,0.28)), transparent 70%);
+}
+/* Star Drape & Projector Speckles */
+.star-field{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%, #ffffff, transparent),
+    radial-gradient(1px 1px at 22% 42%, #bae6fd, transparent),
+    radial-gradient(1.8px 1.8px at 34% 14%, #ffffff, transparent),
+    radial-gradient(1.2px 1.2px at 47% 28%, #99f6e4, transparent),
+    radial-gradient(1.5px 1.5px at 61% 16%, #ffffff, transparent),
+    radial-gradient(1px 1px at 73% 36%, #bae6fd, transparent),
+    radial-gradient(1.8px 1.8px at 85% 20%, #ffffff, transparent),
+    radial-gradient(1.2px 1.2px at 91% 48%, #99f6e4, transparent),
+    radial-gradient(1.3px 1.3px at 16% 64%, #ffffff, transparent),
+    radial-gradient(1.3px 1.3px at 81% 66%, #ffffff, transparent);
+  opacity:var(--stars,0.65);
+}
+/* Drape vertical pleats */
+.drape-pleats{
+  position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 2px,rgba(0,0,0,.38) 2px 14px);
+}
+
+/* Client Logo Watermark on Backdrop */
+.stage-client-logo{
+  position:absolute;top:14px;right:16px;z-index:3;
+  display:flex;align-items:center;gap:8px;
+  background:rgba(7,11,18,.72);border:1px solid rgba(255,255,255,.14);
+  padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#e2e8f0;
+}
+.stage-client-logo img{height:20px;width:auto;object-fit:contain;background:#fff;border-radius:3px;padding:1px 3px}
+
+/* Tile Rigging Container */
+.tile-rig{
+  position:relative;z-index:2;
+  width:100%;height:100%;
+  padding:14px 18px 10px;
+  display:flex;align-items:flex-start;justify-content:center;
+  gap:var(--col-gap,18px);
+}
+.tile-col{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+}
+.wafer-tile{
+  width:var(--tile-sz,24px);height:var(--tile-sz,24px);
+  border-radius:3px;position:relative;
+  background:linear-gradient(135deg,rgba(45,212,191,.92),rgba(52,211,153,.88) 48%,rgba(56,189,248,.92));
+  border:1px solid rgba(255,255,255,.65);
+  box-shadow:0 0 12px rgba(45,212,191,.45),inset 0 0 6px rgba(255,255,255,.5);
+}
+.wafer-tile.mode-blue{
+  background:linear-gradient(135deg,#38BDF8,#2563EB 55%,#E0F2FE);
+  box-shadow:0 0 12px rgba(56,189,248,.5),inset 0 0 6px rgba(255,255,255,.55);
+}
+.wafer-tile.mode-mystic{
+  background:linear-gradient(135deg,#F8FAFC,#99F6E4 52%,#38BDF8);
+  box-shadow:0 0 12px rgba(248,250,252,.42),inset 0 0 6px rgba(255,255,255,.65);
+}
+.chain-link{
+  width:2px;height:5px;background:#64748B;margin:-5px 0 0;opacity:.8;
+}
+
+/* Podium & Speaker Elements */
+.stage-props{
+  position:absolute;bottom:0;left:0;right:0;z-index:4;
+  pointer-events:none;height:110px;
+}
+.podium-unit{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:46px;height:66px;
+  display:flex;flex-direction:column;align-items:center;
+  transition:left .25s ease,opacity .2s ease;
+}
+.podium-unit.pos-left{left:36%}
+.podium-unit.pos-right{left:64%}
+.podium-top{
+  width:52px;height:8px;background:#1E293B;border:1px solid #475569;border-radius:2px;
+}
+.podium-body{
+  width:38px;height:52px;
+  background:linear-gradient(180deg,#0F172A,#090D16);
+  border:1px solid #334155;border-bottom:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.podium-body span{
+  width:18px;height:18px;border-radius:3px;border:1px solid rgba(45,212,191,.45);
+  background:rgba(45,212,191,.12);
+}
+.podium-base{width:48px;height:6px;background:#1E293B;border-radius:2px 2px 0 0}
+
+.speaker-unit{
+  position:absolute;bottom:0;right:14%;
+  width:26px;height:86px;
+  display:flex;flex-direction:column;align-items:center;
+  transition:opacity .2s ease;
+}
+.speaker-cab{
+  width:24px;height:40px;background:#0B0F17;border:1px solid #475569;border-radius:3px;
+  display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;padding:3px 0;
+}
+.speaker-cab i{width:12px;height:12px;border-radius:50%;border:1px solid #64748B;display:block}
+.speaker-pole{width:3px;height:38px;background:#475569}
+.speaker-tripod{width:26px;height:8px;border-top:2px solid #475569;border-left:2px solid #475569;border-right:2px solid #475569}
+
+/* 24ft x 2ft Stage Riser */
+.stage-riser{
+  position:relative;z-index:5;width:92%;height:34px;
+  background:linear-gradient(180deg,#1E293B 0%,#090D16 22%,#05070B 100%);
+  border-top:2px solid #475569;
+  display:flex;align-items:center;justify-content:space-between;padding:0 14px;
+  font:600 11px/1 var(--disp);letter-spacing:.14em;text-transform:uppercase;color:#94A3B8;
+}
+
+.stage-caption{
+  padding:14px 18px;background:#0A101B;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.stage-caption p{font-size:13.5px;color:#CBD5E1}
+.stage-caption strong{color:#fff}
+
+/* Right Controls & Prompt Card */
+.controls-col{display:flex;flex-direction:column;gap:16px}
+.card{
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;
+}
+.card h2{
+  font:700 15px/1 var(--disp);letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;
+}
+.card h2 span{font:600 11px/1 var(--sans);letter-spacing:.08em;color:var(--accent)}
+
+.ctrl-grid{display:grid;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:600;color:var(--muted);display:flex;justify-content:space-between}
+.field input[type="text"],.field select{
+  width:100%;min-height:40px;padding:0 12px;border-radius:8px;
+  background:var(--panel2);border:1px solid var(--border);font-size:13.5px;color:#fff;
+}
+.field input[type="range"]{width:100%;accent-color:var(--accent);cursor:pointer}
+
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;border-radius:8px;background:var(--panel2);border:1px solid var(--border);
+  font-size:13px;font-weight:500;cursor:pointer;
+}
+.toggle-row input{accent-color:var(--accent);width:16px;height:16px;cursor:pointer}
+
+.logo-upload-row{display:flex;gap:8px;align-items:center}
+.mini-btn{
+  min-height:36px;padding:0 12px;border-radius:7px;
+  background:var(--panel2);border:1px solid var(--border);
+  font:600 12px/1 var(--sans);color:#fff;cursor:pointer;white-space:nowrap;
+}
+.mini-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+.prompt-box{
+  width:100%;min-height:132px;padding:12px;border-radius:8px;
+  background:#070B12;border:1px solid var(--border);
+  font:400 12.5px/1.5 var(--sans);color:#E2E8F0;resize:vertical;
+}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.btn-main{
+  min-height:44px;padding:0 16px;border-radius:8px;border:0;
+  background:var(--accent);color:#041014;
+  font:700 13px/1 var(--disp);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+}
+.btn-main:hover{filter:brightness(1.08)}
+.btn-sec{
+  min-height:44px;padding:0 16px;border-radius:8px;
+  background:var(--panel2);border:1px solid var(--border);color:#fff;
+  font:700 13px/1 var(--disp);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+}
+.btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+
+.spec-list{
+  list-style:none;display:grid;gap:6px;font-size:12.5px;color:var(--muted);
+  border-top:1px solid var(--border);padding-top:12px;margin-top:12px;
+}
+.spec-list li{display:flex;justify-content:space-between;gap:12px}
+.spec-list strong{color:#E2E8F0;font-weight:600}
+
+footer.cs-foot{
+  max-width:1380px;margin:8px auto 28px;padding:14px 20px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  font-size:12px;color:var(--muted);border-top:1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="cs-brand">
+      <div class="cs-mark" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="2" y="4" width="20" height="3" rx="1.5" fill="#2DD4BF"/>
+          <rect x="5" y="10.5" width="14" height="3" rx="1.5" fill="#38BDF8"/>
+          <rect x="8" y="17" width="8" height="3" rx="1.5" fill="#34D399"/>
+        </svg>
+      </div>
+      <div class="cs-title">
+        <b>Center Stage AV</b>
+        <span>50-Tile Scenic Render &amp; Prompt Studio</span>
+      </div>
+    </div>
+
+    <div class="client-pill">
+      <div id="headerLogoSlot"></div>
+      <div>
+        <small>Client Preview</small><br>
+        <strong id="headerClientName">Ontario Aerospace</strong>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <!-- Left: Interactive 50-Tile Stage Render -->
+  <section class="stage-card" aria-label="Interactive Stage Visualizer">
+    <div class="stage-bar">
+      <div class="layout-tabs" role="group" aria-label="50-Tile Layout Options">
+        <button type="button" class="tab-btn" data-opt="1" aria-pressed="true">Option 1: 5-Column Aurora</button>
+        <button type="button" class="tab-btn" data-opt="2" aria-pressed="false">Option 2: Podium 2-3-2 Cascade</button>
+        <button type="button" class="tab-btn" data-opt="3" aria-pressed="false">Option 3: Architectural Wings</button>
+      </div>
+      <div class="tile-badge"><i></i><span id="tileCountLabel">50 Tiles Total</span></div>
+    </div>
+
+    <div class="ballroom" id="ballroomStage">
+      <div class="ceiling-truss" aria-hidden="true"></div>
+      <div class="drape-frame">
+        <div class="aurora-wash" id="auroraWash"></div>
+        <div class="star-field" id="starField"></div>
+        <div class="drape-pleats"></div>
+
+        <div class="stage-client-logo" id="backdropClientBadge">
+          <div id="backdropLogoSlot"></div>
+          <span id="backdropClientText">Ontario Aerospace</span>
+        </div>
+
+        <div class="tile-rig" id="tileRig"></div>
+
+        <div class="stage-props">
+          <div class="podium-unit" id="podiumUnit">
+            <div class="podium-top"></div>
+            <div class="podium-body"><span></span></div>
+            <div class="podium-base"></div>
+          </div>
+          <div class="speaker-unit" id="speakerUnit">
+            <div class="speaker-cab"><i></i><i></i></div>
+            <div class="speaker-pole"></div>
+            <div class="speaker-tripod"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-riser">
+        <span>24 FT WIDE STAGE DECK</span>
+        <span id="trimSpecLabel">14 FT TRIM HEIGHT · 14" COLUMN GAP</span>
+        <span>2 FT RISER</span>
+      </div>
+    </div>
+
+    <div class="stage-caption">
+      <p id="layoutDesc"><strong>Option 1 (5 × 10 = 50 Tiles):</strong> Five balanced vertical columns of 10 chain-link LED tiles spaced with clean gaps across the 24 ft Northern Lights backdrop.</p>
+    </div>
+  </section>
+
+  <!-- Right: Client Controls & Prompt Builder -->
+  <aside class="controls-col">
+    <div class="card">
+      <h2>Client Branding &amp; Scene <span>Customize</span></h2>
+      <div class="ctrl-grid">
+        <div class="row-2">
+          <div class="field">
+            <label for="clientNameInput">Client / Event Name</label>
+            <input type="text" id="clientNameInput" value="Ontario Aerospace" placeholder="Client name">
+          </div>
+          <div class="field">
+            <label for="paletteSelect">Lighting Palette</label>
+            <select id="paletteSelect">
+              <option value="aurora" selected>Northern Lights (Teal / Green / White)</option>
+              <option value="blue">Corporate Blue &amp; Cyan Aurora</option>
+              <option value="mystic">Mystic White, Black &amp; Ice Teal</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Client Logo Overlay (Optional)</label>
+          <div class="logo-upload-row">
+            <button type="button" class="mini-btn" id="uploadLogoBtn">Upload Client Logo</button>
+            <input type="file" id="logoFileInput" accept="image/*" hidden>
+            <button type="button" class="mini-btn" id="clearLogoBtn" hidden>Remove</button>
+            <span id="logoStatus" style="font-size:12px;color:var(--muted)">Using text badge</span>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="gapSlider">Column Gap <span id="gapVal">14"</span></label>
+            <input type="range" id="gapSlider" min="12" max="16" step="1" value="14">
+          </div>
+          <div class="field">
+            <label for="starSlider">Star Drape / Projector <span id="starVal">70%</span></label>
+            <input type="range" id="starSlider" min="0" max="100" step="5" value="70">
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="podiumSelect">Podium Position</label>
+            <select id="podiumSelect">
+              <option value="center" selected>Center Stage</option>
+              <option value="left">Stage Left</option>
+              <option value="right">Stage Right</option>
+              <option value="hide">Hide Podium</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Stage Speaker</label>
+            <label class="toggle-row" for="speakerToggle">
+              <span>Show Side Speaker</span>
+              <input type="checkbox" id="speakerToggle" checked>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Render Prompt &amp; Spec Sheet <span>50-Tile Lock</span></h2>
+      <div class="field">
+        <label for="promptOutput">Live AI Render Prompt (Edit or Copy)</label>
+        <textarea class="prompt-box" id="promptOutput"></textarea>
+      </div>
+      <div class="action-row">
+        <button type="button" class="btn-main" id="copyPromptBtn">Copy Prompt</button>
+        <button type="button" class="btn-sec" id="downloadSpecBtn">Download Spec</button>
+      </div>
+
+      <ul class="spec-list">
+        <li><span>Total Hardware Count</span><strong>50 Chain-Link Wafer Tiles</strong></li>
+        <li><span>Stage &amp; Trim Footprint</span><strong>24 ft W × 2 ft H Stage · 14 ft Trim</strong></li>
+        <li><span>Rigging &amp; Airflow Note</span><strong>Double-sided tape / clips on drape line</strong></li>
+        <li><span>Venue / Logistics</span><strong>Dec 8 Load-In (5–11 PM) · Black Road Case</strong></li>
+      </ul>
+    </div>
+  </aside>
+</main>
+
+<footer class="cs-foot">
+  <span>Center Stage AV · Interactive Client Render &amp; Staging Preview</span>
+  <span>All 3 layouts verified at exactly 50 tiles</span>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+
+const OPTIONS={
+  1:{
+    name:"Option 1: 5-Column Symmetrical Aurora",
+    cols:[10,10,10,10,10],
+    desc:"<strong>Option 1 (5 × 10 = 50 Tiles):</strong> Five balanced vertical columns of 10 chain-link LED tiles spaced with clean gaps across the 24 ft Northern Lights backdrop.",
+    promptLayout:"arranged in 5 even vertical columns of 10 tiles each (50 tiles total), separated by clean vertical black drape gaps"
+  },
+  2:{
+    name:"Option 2: Podium-Framed 2-3-2 Center Cascade",
+    cols:[9,8,4,2,3,2,4,8,10],
+    desc:"<strong>Option 2 (9+8+4+2+3+2+4+8+10 = 50 Tiles):</strong> Accounts for the center podium and speaker with a stepped 2–3–2 tile center cascade framed by taller stepped wings on the left and right.",
+    promptLayout:"arranged in a symmetrical podium-framed cascade totaling 50 tiles: a stepped center drop above the podium (2 tiles, 3 tiles, 2 tiles) flanked by stepped inner and outer columns (4, 8, 9 on left and 4, 8, 10 on right)"
+  },
+  3:{
+    name:"Option 3: Architectural Wings & Center Framing",
+    cols:[11,9,5,5,9,11],
+    desc:"<strong>Option 3 (11+9+5+5+9+11 = 50 Tiles):</strong> Wide architectural V-tapered framing with tall 11-tile outer columns and a clean 5-tile center header leaving open headroom above the podium.",
+    promptLayout:"arranged in a wide architectural V-tapered framing totaling 50 tiles, with tall 11-tile and 9-tile outer wings and twin 5-tile center drops leaving open headroom over the podium"
+  }
+};
+
+let state={
+  opt:1,
+  client:"Ontario Aerospace",
+  palette:"aurora",
+  gap:14,
+  stars:70,
+  podium:"center",
+  speaker:true,
+  logoData:null
+};
+
+function renderRig(){
+  const rig=$('#tileRig');
+  const cfg=OPTIONS[state.opt];
+  rig.innerHTML='';
+  const gapPx=Math.round((state.gap/14)*16);
+  rig.style.setProperty('--col-gap',gapPx+'px');
+
+  const maxRows=Math.max(...cfg.cols);
+  const tileSz=maxRows>=11?20:(maxRows===10?22:24);
+  rig.style.setProperty('--tile-sz',tileSz+'px');
+
+  cfg.cols.forEach(count=>{
+    const col=document.createElement('div');
+    col.className='tile-col';
+    for(let i=0;i<count;i++){
+      if(i>0){
+        const link=document.createElement('span');
+        link.className='chain-link';
+        col.appendChild(link);
+      }
+      const t=document.createElement('div');
+      t.className='wafer-tile'+(state.palette==='blue'?' mode-blue':state.palette==='mystic'?' mode-mystic':'');
+      col.appendChild(t);
+    }
+    rig.appendChild(col);
+  });
+
+  const sum=cfg.cols.reduce((a,b)=>a+b,0);
+  $('#tileCountLabel').textContent=`${sum} Tiles Total`;
+  $('#layoutDesc').innerHTML=cfg.desc;
+  $('#trimSpecLabel').textContent=`14 FT TRIM HEIGHT · ${state.gap}" COLUMN GAP`;
+
+  const wash=$('#auroraWash');
+  wash.className='aurora-wash'+(state.palette==='blue'?' mode-blue':state.palette==='mystic'?' mode-mystic':'');
+  $('#starField').style.setProperty('--stars',(state.stars/100).toFixed(2));
+
+  const pod=$('#podiumUnit');
+  pod.hidden=(state.podium==='hide');
+  pod.className='podium-unit'+(state.podium==='left'?' pos-left':state.podium==='right'?' pos-right':'');
+  $('#speakerUnit').hidden=!state.speaker;
+
+  updatePrompt();
+}
+
+function updatePrompt(){
+  const cfg=OPTIONS[state.opt];
+  const palText=state.palette==='aurora'
+    ?'Northern Lights (Aurora Borealis) lighting wash in deep teal, emerald green, cyan-blue, and crisp white highlights against a mystic black night backdrop'
+    :state.palette==='blue'
+    ?'corporate cyan-blue, cobalt, and icy white aurora borealis lighting wash against deep black velvet drape'
+    :'mystic black, crisp white, and subtle ice-teal aurora highlights';
+  const starText=state.stars>15
+    ?`Subtle star-drape LED pinpoints and star-projector speckles (${state.stars}% intensity) across the upper black drape.`
+    :'Clean matte black velvet backdrop with minimal ambient reflections.';
+  const propText=state.podium==='hide'
+    ?'Open 24-foot stage deck.'
+    :`A sleek modern black acrylic speaking podium positioned ${state.podium==='center'?'center-stage':state.podium==='left'?'stage-left':'stage-right'}${state.speaker?' with a compact black line-array speaker on a tripod stand to the side':''}.`;
+
+  $('#promptOutput').value=
+`Photorealistic wide-angle corporate event stage render for ${state.client || 'client'}, produced by Center Stage AV. A 24-foot wide by 2-foot tall black-skirted stage inside a dark hotel ballroom with a 14-foot tall black velvet backdrop illuminated by a ${palText}. Suspended across the drape are exactly 50 square modular LED wafer tiles ${cfg.promptLayout} with ${state.gap}-inch gaps between columns, each glowing with matching gradient light. ${propText} ${starText} Sharp architectural stage lighting, realistic ballroom reflections, 16:9 presentation render.`;
+}
+
+$$('.tab-btn').forEach(btn=>btn.onclick=()=>{
+  $$('.tab-btn').forEach(b=>b.setAttribute('aria-pressed','false'));
+  btn.setAttribute('aria-pressed','true');
+  state.opt=parseInt(btn.dataset.opt,10);
+  renderRig();
+});
+
+$('#clientNameInput').oninput=e=>{
+  state.client=e.target.value.trim()||'Client Event';
+  $('#headerClientName').textContent=state.client;
+  $('#backdropClientText').textContent=state.client;
+  updatePrompt();
+};
+
+$('#paletteSelect').onchange=e=>{
+  state.palette=e.target.value;
+  renderRig();
+};
+
+$('#gapSlider').oninput=e=>{
+  state.gap=parseInt(e.target.value,10);
+  $('#gapVal').textContent=state.gap+'"';
+  renderRig();
+};
+
+$('#starSlider').oninput=e=>{
+  state.stars=parseInt(e.target.value,10);
+  $('#starVal').textContent=state.stars+'%';
+  renderRig();
+};
+
+$('#podiumSelect').onchange=e=>{
+  state.podium=e.target.value;
+  renderRig();
+};
+
+$('#speakerToggle').onchange=e=>{
+  state.speaker=e.target.checked;
+  renderRig();
+};
+
+/* Logo Upload */
+$('#uploadLogoBtn').onclick=()=>$('#logoFileInput').click();
+$('#logoFileInput').onchange=e=>{
+  const file=e.target.files&&e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    state.logoData=ev.target.result;
+    ['#headerLogoSlot','#backdropLogoSlot'].forEach(sel=>{
+      const slot=$(sel);
+      slot.innerHTML='';
+      const img=document.createElement('img');
+      img.src=state.logoData;
+      img.alt=state.client+' logo';
+      slot.appendChild(img);
+    });
+    $('#logoStatus').textContent=file.name;
+    $('#clearLogoBtn').hidden=false;
+  };
+  reader.readAsDataURL(file);
+};
+
+$('#clearLogoBtn').onclick=()=>{
+  state.logoData=null;
+  $('#logoFileInput').value='';
+  $('#headerLogoSlot').innerHTML='';
+  $('#backdropLogoSlot').innerHTML='';
+  $('#logoStatus').textContent='Using text badge';
+  $('#clearLogoBtn').hidden=true;
+};
+
+/* Copy & Download Spec */
+$('#copyPromptBtn').onclick=()=>{
+  const box=$('#promptOutput');
+  box.select();
+  navigator.clipboard?.writeText(box.value);
+  const btn=$('#copyPromptBtn');
+  btn.textContent='Copied!';
+  setTimeout(()=>btn.textContent='Copy Prompt',1600);
+};
+
+$('#downloadSpecBtn').onclick=()=>{
+  const cfg=OPTIONS[state.opt];
+  const txt=[
+    `CENTER STAGE AV — PRODUCTION & RENDER SPEC`,
+    `Client: ${state.client}`,
+    `Selected Layout: ${cfg.name} (${cfg.cols.join('-')} = 50 tiles)`,
+    `Stage Dimensions: 24 ft W x 2 ft H Riser | 14 ft Trim Height`,
+    `Column Gap: ${state.gap} inches`,
+    `Lighting Theme: ${state.palette.toUpperCase()} (Star intensity: ${state.stars}%)`,
+    `Podium / Speaker: Podium ${state.podium.toUpperCase()} | Side Speaker ${state.speaker?'YES':'NO'}`,
+    `Rigging Note: Secure drape line with double-sided tape/clips against HVAC airflow.`,
+    ``,
+    `RENDER PROMPT:`,
+    $('#promptOutput').value
+  ].join('\n');
+  const blob=new Blob([txt],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='center-stage-av-50-tile-spec.txt';
+  a.click();
+};
+
+renderRig();
+</script>
+</body>
+</html>
